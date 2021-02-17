@@ -10,11 +10,11 @@
 <!-- SPIS-TRESCI -->
 ## SPIS TREŚCI
 
-* [O projekcie](#SPIS-TRESCI)
-* [Kontakt](#contact)
+* [O projekcie](#O PROJEKCIE)
+* [Kontakt](#Kontakt)
 
 
-<!-- O PROJEKCIE -->
+<!-- O-PROJEKCIE -->
 ## O PROJEKCIE
 <b>Mechanizm logowania wraz z zabezpieczeniem.</b><br />
 Do jego stworzenia użyłem mechanizmu identity zalecanego przez firmę Microsoft.
