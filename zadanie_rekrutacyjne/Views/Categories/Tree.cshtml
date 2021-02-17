@@ -1,0 +1,94 @@
+﻿@model IEnumerable<zadanie_rekrutacyjne.ViewModels.CategoryViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string sortOrder = "";
+    string nodeId = "";
+    string searchText = "";
+    if (ViewData["SortOrder"] != null)
+    {
+        sortOrder = ViewData["SortOrder"].ToString();
+    }
+    if (ViewData["NodeID"] != null)
+    {
+        nodeId = ViewData["NodeID"].ToString();
+    }
+    if (ViewData["SearchText"] != null)
+    {
+        searchText = ViewData["SearchText"].ToString();
+    }
+}
+
+
+<div class="container ">
+    <div class="row my-5">
+        <div class="col d-flex justify-content-center">
+            <ul class="nav nav-pills mb-3" id="category-tab" role="tablist">
+                <li class="nav-item">
+                    @Html.ActionLink("Drzewo", "Tree", "Categories", new { }, new { @class = "nav-link  active btn-tree" })
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("Tabela", "Table", "Categories", new { }, new { @class = "nav-link" })
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <div class="col">
+            @Html.ActionLink("Utwórz kategorię", "Create", "Categories", new { }, new { @class = "btn btn-success create" })
+            <button class="btn btn-light ml-3" onclick="reverseCollapseState()">Rozwiń/zwiń drzewo</button>
+        </div>
+        <div class="col-auto">
+            <form asp-action="Tree" method="get" asp-controller="Categories">
+                <div class="input-group">
+                    <div class="form-outline">
+                        <input type="search" placeholder="Wpisz tekst do wyszukania..." value="@ViewData["SearchText"]" name="searchText" class="form-control " style="width:250px;" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    @Html.ActionLink("Pokaż wszystkie", "Tree", "Categories", new { }, new { @class = "btn btn-light ml-2" })
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Sortuj po nazwie:
+            @if (sortOrder.Equals("desc"))
+            {
+                @Html.ActionLink("", "Tree", "Categories", new { searchText = searchText, sortOrder = sortOrder.Equals("desc") ? "asc" : "desc", nodeID = -1 }, new { @class = "btn fas fa-chevron-down tree-sort" })
+            }
+            else if (sortOrder.Equals("asc"))
+            {
+                @Html.ActionLink("", "Tree", "Categories", new { searchText = searchText, sortOrder = sortOrder.Equals("desc") ? "asc" : "desc", nodeID = -1 }, new { @class = "btn fas fa-chevron-up tree-sort" })
+            }
+            else
+            {
+                @Html.ActionLink("", "Tree", "Categories", new { searchText = searchText, sortOrder = sortOrder.Equals("desc") ? "asc" : "desc", nodeID = -1 }, new { @class = "btn fas fa-chevron-down tree-sort" })
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" id="category-tree">
+            @await Component.InvokeAsync("Node", new { categories = Model, withOptions = true })
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div id="editModal"></div>
+<div id="createModal"></div>
+<div id="detailModal"></div>
+<div id="deleteModal"></div>
+
+
+

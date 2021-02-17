@@ -1,0 +1,157 @@
+﻿@model IEnumerable<zadanie_rekrutacyjne.Database.Models.Category>
+
+@{
+    string nameSortOrder = "";
+    string parentCategorySortOrder = "";
+    if (ViewData["NameSortOrder"] != null)
+    {
+        nameSortOrder = ViewData["NameSortOrder"].ToString();
+    }
+    if (ViewData["ParentCategorySortOrder"] != null)
+    {
+        parentCategorySortOrder = ViewData["ParentCategorySortOrder"].ToString();
+    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <ul class="nav nav-pills mb-3" id="category-tab" role="tablist">
+                <li class="nav-item">
+                    @Html.ActionLink("Drzewo", "Tree", "Categories", new { }, new { @class = "nav-link btn-tree" })
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("Tabela", "Table", "Categories", new { }, new { @class = "nav-link active" })
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col">
+        @Html.ActionLink("Utwórz kategorię", "Create", "Categories", new { }, new { @class = "btn btn-success create" })
+    </div>
+    <div class="col-auto">
+        <form asp-action="Table" method="get" asp-controller="Categories">
+            <div class="input-group">
+                <div class="form-outline">
+                    <input type="search" placeholder="Wpisz tekst do wyszukania..." value="@ViewData["SearchText"]" name="searchText" class="form-control " style="width:250px;" />
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+                @Html.ActionLink("Pokaż wszystkie", "Table", "Categories", new { }, new { @class = "btn btn-light ml-2" })
+            </div>
+        </form>
+    </div>
+</div>
+<div class="table-scrollable">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @if (!String.IsNullOrWhiteSpace(nameSortOrder))
+                    {
+                        if (nameSortOrder.Equals("desc"))
+                        {
+                            <div>
+                                Nazwa kategorii:
+                                @Html.ActionLink("", "Table", "Categories", new { nameSortOrder = nameSortOrder.Equals("desc") ? "asc" : "desc", searchText = ViewData["SearchText"] }, new
+                                                                                                                                                                    { @class = "btn fas fa-chevron-down" })
+                            </div>
+
+                        }
+                        else if (nameSortOrder.Equals("asc"))
+                        {
+                            <div>
+                                Nazwa kategorii:
+                                @Html.ActionLink("", "Table", "Categories", new { nameSortOrder = nameSortOrder.Equals("desc") ? "asc" : "desc", searchText = ViewData["SearchText"] }, new
+                                                                                                                                                                    { @class = "btn fas fa-chevron-up" })
+                            </div>
+
+                        }
+                    }
+                    else
+                    {
+                        <div>
+                            Nazwa kategorii:
+                            @Html.ActionLink("", "Table", "Categories", new { nameSortOrder = nameSortOrder.Equals("desc") ? "asc" : "desc", searchText = ViewData["SearchText"] }, new
+                                                                                                                                                            { @class = "btn fas fa-chevron-down" })
+                        </div>
+
+                    }
+
+                </th>
+                <th>
+                    @if (!String.IsNullOrWhiteSpace(parentCategorySortOrder))
+                    {
+                        if (parentCategorySortOrder.Equals("desc"))
+                        {
+                            <div>
+                                Kategoria nadrzędna:
+                                @Html.ActionLink("", "Table", "Categories", new { parentCategorySortOrder = parentCategorySortOrder.Equals("desc") ? "asc" : "desc", searchText = ViewData["SearchText"] }, new
+                                                                                                                                                                                        { @class = "btn fas fa-chevron-down" })
+                            </div>
+
+                        }
+                        else if (parentCategorySortOrder.Equals("asc"))
+                        {
+                            <div>
+                                Kategoria nadrzędna:
+                                @Html.ActionLink("", "Table", "Categories", new { parentCategorySortOrder = parentCategorySortOrder.Equals("desc") ? "asc" : "desc", searchText = ViewData["SearchText"] }, new
+                                                                                                                                                                                    { @class = "btn fas fa-chevron-up" })
+                            </div>
+
+                        }
+                    }
+                    else
+                    {
+                        <div>
+                            Kategoria nadrzędna:
+                            @Html.ActionLink("", "Table", "Categories", new { parentCategorySortOrder = parentCategorySortOrder.Equals("desc") ? "asc" : "desc", searchText = ViewData["SearchText"] }, new
+                                                                                                                                                                                     { @class = "btn fas fa-chevron-down" })
+                        </div>
+
+                    }
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @if (item.Parent == null)
+                        {
+                            <p>Kategoria główna</p>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Parent.Name)
+                        }
+
+                    </td>
+                    <td class="text-right">
+                        @Html.ActionLink("Edytuj", "Edit", "Categories", new { id = item.ID }, new { @class = "btn btn-secondary edit" })
+                        @Html.ActionLink("Szczegóły", "Details", "Categories", new { id = item.ID }, new { @class = "btn btn-info details" })
+                        @Html.ActionLink("Usuń", "Delete", "Categories", new { id = item.ID }, new { @class = "btn btn-danger delete" })
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<div id="editModal"></div>
+<div id="createModal"></div>
+<div id="detailModal"></div>
+<div id="deleteModal"></div>
+
+

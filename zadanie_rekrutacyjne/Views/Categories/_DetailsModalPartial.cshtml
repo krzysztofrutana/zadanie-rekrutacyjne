@@ -1,0 +1,59 @@
+﻿@model zadanie_rekrutacyjne.ViewModels.CategoryViewModel
+
+<div class="modal hide fade" tabindex="-1" id="detail-modal" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Szczegóły kategorii</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Delete" id="delete-form" role="form">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <div class="col">
+                            <h6>
+                                <b>@Html.LabelFor(model => model.Name)</b>
+                                @Html.DisplayFor(model => model.Name)
+                            </h6>
+                            @if (Model.Parent == null)
+                            {
+                                <h6>
+                                    <b>
+                                        Typ kategorii:
+                                    </b>
+                                    Kategoria główna
+                                </h6>
+                            }
+                            else
+                            {
+                                <h6>
+                                    <b>
+                                        Kategoria nadrzędna:
+                                    </b>
+                                    @Html.DisplayFor(model => model.Parent.Name)
+                                </h6>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col">
+                            <h6>
+                                <p><b>Kategorie podrzędne:</b></p>
+                            </h6>
+                                @await Component.InvokeAsync("Node", new { categories = Model.CategoryChildren, withOptions = false })
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-detail-modal-close" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

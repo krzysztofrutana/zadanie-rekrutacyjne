@@ -1,0 +1,49 @@
+﻿@model zadanie_rekrutacyjne.ViewModels.CategoryViewModel
+
+
+<div class="modal hide fade" tabindex="-1" id="edit-modal" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edytuj kategorię</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Edit" id="edit-form" role="form">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <div class="form-group">
+                        <div class="col">
+                            <h6>
+                                @Html.LabelFor(c => c.Name)
+                                <input asp-for="Name" type="text" class="form-control" />
+                            </h6>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col">
+                            <h6>
+                                @Html.LabelFor(c => c.ParentID)
+                            </h6>
+                            @Html.DropDownListFor(model => model.ParentID, ViewBag.CategoriesList as SelectList, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ParentID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-edit-modal-close" data-dismiss="modal">Anuluj</button>
+                <input type="submit" value="Zapisz" class="btn btn-primary btn-edit-modal-save" data-save="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

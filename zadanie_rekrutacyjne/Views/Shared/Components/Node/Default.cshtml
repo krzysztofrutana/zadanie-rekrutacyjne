@@ -1,0 +1,93 @@
+﻿@using zadanie_rekrutacyjne.ViewModels
+@model IEnumerable<zadanie_rekrutacyjne.ViewModels.CategoryViewModel>;
+
+@{
+    string sortOrder = "";
+    string nodeId = "";
+    string searchText = "";
+    if (ViewData["SortOrder"] != null)
+    {
+        sortOrder = ViewData["SortOrder"].ToString();
+    }
+    if (ViewData["NodeID"] != null)
+    {
+        nodeId = ViewData["NodeID"].ToString();
+    }
+    if (ViewData["SearchText"] != null)
+    {
+        searchText = ViewData["SearchText"].ToString();
+    }
+}
+<div class="container px-0 mb-2">
+    <ul class="list-group" style="margin: 0; padding: 0;">
+        @foreach (CategoryViewModel category in Model)
+        {
+
+            @if (category.CategoryChildren.Count > 0)
+            {
+                <li class="category-node list-group-item py-0 pr-2 ">
+                    <div class="row justify-content-between my-2 align-items-center">
+                        <i class="fas fa-chevron-@(category.Shown ? "down" : "right") ml-2 mr-1" style="line-height: 40px;"></i>
+                        <div class="col pl-1">
+                            <a href="#div_category_id_@category.ID" class="btn btn-light" id="@category.ID" data-toggle="collapse" onclick="collapsePanelIconChange(this)">@category.Name</a>
+                        </div>
+                        @if (ViewBag.WithOptions)
+                        {
+                            <div class="col text-right panel">
+                                Sortuj po nazwie:
+                                @if (!String.IsNullOrWhiteSpace(nodeId) && int.Parse(nodeId) == category.ID)
+                                {
+                                    if (sortOrder.Equals("desc"))
+                                    {
+                                        @Html.ActionLink("", "Tree", "Categories", new { searchText = searchText, sortOrder = sortOrder.Equals("desc") ? "asc" : "desc", nodeID = category.ID }, new { @class = "btn fas fa-chevron-down tree-sort" })
+                                    }
+                                    else if (sortOrder.Equals("asc"))
+                                    {
+                                        @Html.ActionLink("", "Tree", "Categories", new { searchText = searchText, sortOrder = sortOrder.Equals("desc") ? "asc" : "desc", nodeID = category.ID }, new { @class = "btn fas fa-chevron-up tree-sort" })
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("", "Tree", "Categories", new { searchText = searchText, sortOrder = sortOrder.Equals("desc") ? "asc" : "desc", nodeID = category.ID }, new { @class = "btn fas fa-chevron-down tree-sort" })
+                                }
+
+
+                                @Html.ActionLink("Edytuj", "Edit", "Categories", new { id = category.ID }, new { @class = "btn btn-secondary edit" })
+                                @Html.ActionLink("Szczegóły", "Details", "Categories", new { id = category.ID }, new { @class = "btn btn-info details" })
+                                @Html.ActionLink("Usuń", "Delete", "Categories", new { id = category.ID }, new { @class = "btn btn-danger delete" })
+                            </div>
+                        }
+                    </div>
+                    <div class="row panel">
+                        <div id="div_category_id_@category.ID" class="collapse col collapse-container @(category.Shown ? "show" : "")">
+                            @await Component.InvokeAsync("Node", new { categories = category.CategoryChildren, withOptions = ViewBag.WithOptions })
+                        </div>
+
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="category-node list-group-item  py-0 pr-2">
+                    <div class="row  justify-content-between my-2 align-items-center">
+                        <i class=" fas fas fa-circle mx-2" style="line-height: 40px; font-size:.40em"></i>
+                        <div class="col pl-0">
+                            <p class="p-0 m-auto">
+                                @category.Name
+                            </p>
+                        </div>
+                        @if (ViewBag.WithOptions)
+                        {
+                            <div class="col text-right">
+                                @Html.ActionLink("Edytuj", "Edit", "Categories", new { id = category.ID }, new { @class = "btn btn-secondary edit" })
+                                @Html.ActionLink("Szczegóły", "Details", "Categories", new { id = category.ID }, new { @class = "btn btn-info details" })
+                                @Html.ActionLink("Usuń", "Delete", "Categories", new { id = category.ID }, new { @class = "btn btn-danger delete" })
+                            </div>
+                        }
+                    </div>
+                </li>
+            }
+
+        }
+    </ul>
+</div>

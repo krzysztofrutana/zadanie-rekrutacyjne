@@ -1,0 +1,35 @@
+﻿@using zadanie_rekrutacyjne.ViewModels
+
+@model LoginViewModel
+
+@{
+    ViewBag.Title = "Strona logowania";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="row justify-content-md-start">
+    <div class="col-6">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Login">Login:</label>
+                <input asp-for="Login" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Password">Hasło:</label>
+                <input asp-for="Password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <div class="custom-checkbox">
+                    <label asp-for="RememberMe">
+                        <input asp-for="RememberMe" />
+                        @Html.DisplayNameFor(m => m.RememberMe)
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Zaloguj</button>
+        </form>
+    </div>
+</div>
